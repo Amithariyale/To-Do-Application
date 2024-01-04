@@ -1,4 +1,5 @@
 let tasks = {
+  // tasks object for tracking the properties of task item.
   todo: [],
   started: [],
   completed: [],
@@ -12,6 +13,7 @@ let dropText = document.getElementsByClassName("drop-text");
 
 let id = 1;
 
+// Listening sumbit event on form to create new Task
 form.addEventListener("submit", function (e) {
   e.preventDefault();
 
@@ -25,8 +27,6 @@ form.addEventListener("submit", function (e) {
   const taskDueDate = form.date.value;
   const taskPriority = form.priority.value;
 
-  //   createTask(taskName, taskDueDate, taskPriority, "todo", 0);
-
   const newTask = document.createElement("div");
   newTask.className = "task-item";
   newTask.id = id++;
@@ -35,7 +35,9 @@ form.addEventListener("submit", function (e) {
 
   newTask.innerHTML = `<div class="header">
                           <p>Due on ${taskDueDate}</p>
-                          <p class="priority">${taskPriority}</p>
+                          <p class="priority" style="color:${applyColor(
+                            taskPriority.trim()
+                          )};">${taskPriority}</p>
                       </div>
                       <div>
                           <p>${taskName}</p>
@@ -43,25 +45,32 @@ form.addEventListener("submit", function (e) {
                           </div>
                       </div>`;
 
+  // Creating edit button for task
   let editButton = document.createElement("button");
   editButton.innerHTML = `<i class="fa-regular fa-pen-to-square"></i>`;
 
   editButton.addEventListener("click", editTask);
 
+  //   Creating Delete button for task
   let deleteButton = document.createElement("button");
   deleteButton.innerHTML = `<i class="fa-regular fa-trash-can"></i>`;
 
   deleteButton.addEventListener("click", deleteTask);
+
+  //   Extracting buttons container
   newTask.querySelector(".buttons").append(editButton, deleteButton);
 
+  //   Inserting Tast element in the task list
   todo.insertBefore(newTask, dropText[0]);
 
-  //   function for delete
+  //   function for delete task
   function deleteTask() {
     const currentContainerId = newTask.parentNode.id;
     let index = (tasks[currentContainerId].findIndex = (task) =>
       task.id === newTask.id);
     tasks[currentContainerId].splice(index, 1);
+
+    // After delete updating the local storage.
     localStorage.setItem("tasks", JSON.stringify(tasks));
     document.getElementById(
       `${currentContainerId}-count`
@@ -79,35 +88,45 @@ form.addEventListener("submit", function (e) {
     newTask.remove();
   }
 
-  //   function for edit
-  function editTask() {
-
-    form.task.value = taskName;
-    form.date.value = taskDueDate;
-    form.priority.value = taskPriority;
-    form.button.innerText = "Save";
-    deleteTask();
-  }
-
+  //   Creating Task object to store it in local storage.
   let taskObj = {
     id: newTask.id,
     name: taskName,
     dueDate: taskDueDate,
     priority: taskPriority,
   };
-  tasks.todo.push(taskObj);
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+  tasks.todo.push(taskObj); //Pushing the new task into the tasks object.
 
+  //   Storing the newly created task in the local storage.
+  localStorage.setItem("tasks", JSON.stringify(tasks));
   document.getElementById("todo-count").innerText = `${tasks.todo.length}`;
   document.getElementById("todo-high").innerText = `${countHigh(
     tasks.todo
   )} of ${tasks.todo.length}`;
 
-  // Tasks object for saving the data
-
   form.reset();
 });
 
+//   function for edit task
+function editTask(e) {
+  const currentElementId = e.currentTarget.parentNode.parentNode.parentNode.id;
+  let currentElement = null;
+  for (let key in tasks) {
+    tasks[key].forEach((item, index) => {
+      if (item.id === currentElementId) {
+        currentElement = item;
+        tasks[key].splice(index, 1);
+      }
+    });
+  }
+  form.task.value = currentElement.name;
+  form.date.value = currentElement.dueDate;
+  form.priority.value = currentElement.priority;
+  form.button.innerText = "Save";
+  document.getElementById(currentElementId).remove();
+}
+
+// function for couting the highest priority tasks
 function countHigh(arr) {
   let ans = 0;
   arr.forEach((item) => {
@@ -116,7 +135,15 @@ function countHigh(arr) {
   return ans;
 }
 
-// Changing status (to-do, started or completed)
+// Function to apply color based on priority
+
+function applyColor(priority) {
+  if (priority === "High") return "red";
+  else if (priority === "Medium") return "blue";
+  else return "yellow";
+}
+
+// Changing task status (to-do, started or completed)
 
 let draggingElement = null;
 let dropIndex = null;
@@ -139,10 +166,12 @@ completed.addEventListener("dragover", (e) => {
   dropIndex = 2;
 });
 
+// Adding drop event listener to all sections
 todo.addEventListener("drop", dropElement);
 started.addEventListener("drop", dropElement);
 completed.addEventListener("drop", dropElement);
 
+// Function for droping the task
 function dropElement(e) {
   const prevContainerId = draggingElement.parentNode.id;
   const currentContainerId = e.currentTarget.id;
@@ -153,6 +182,8 @@ function dropElement(e) {
 
   tasks[currentContainerId].push(tasks[prevContainerId][index]);
   tasks[prevContainerId].splice(index, 1);
+
+  //   After modification, updating the local storage.
   localStorage.setItem("tasks", JSON.stringify(tasks));
 
   //   Decreesing the count of Element from previous container
@@ -200,6 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+// Function for creating task for stored data in local storage.
 function createTask(id, taskName, taskDueDate, taskPriority, key, i) {
   const newTask = document.createElement("div");
   newTask.className = "task-item";
@@ -209,7 +241,9 @@ function createTask(id, taskName, taskDueDate, taskPriority, key, i) {
 
   newTask.innerHTML = `<div class="header">
                           <p>Due on ${taskDueDate}</p>
-                          <p class="priority">${taskPriority}</p>
+                          <p class="priority" style="color:${applyColor(
+                            taskPriority.trim()
+                          )}">${taskPriority}</p>
                       </div>
                       <div>
                           <p>${taskName}</p>
@@ -245,18 +279,11 @@ function createTask(id, taskName, taskDueDate, taskPriority, key, i) {
     ).innerText = `${countHigh(tasks[currentContainerId])} of ${
       tasks[currentContainerId].length
     }`;
+    tasks.todo.length
+      ? (document.getElementById("empty-container").style.display = "none")
+      : (document.getElementById("empty-container").style.display = "flex");
 
     newTask.remove();
-  }
-
-  //   function for edit
-  function editTask() {
-
-    form.task.value = taskName;
-    form.date.value = taskDueDate;
-    form.priority.value = taskPriority;
-    form.button.innerText = "Save";
-    deleteTask();
   }
 
   document.getElementById(`${key}-count`).innerText = `${tasks[key].length}`;
@@ -272,6 +299,7 @@ function createTask(id, taskName, taskDueDate, taskPriority, key, i) {
 
 const filter = document.getElementById("filter");
 
+// Adding change event for filtering the tasks according to the priorities.
 filter.addEventListener("change", () => {
   for (let key in tasks) {
     tasks[key].forEach((item) => {
@@ -295,6 +323,30 @@ filter.addEventListener("change", () => {
   for (let key in tasks) {
     tasks[key].forEach((item) => {
       if (item.priority === filter.value)
+        createTask(item.id, item.name, item.dueDate, item.priority, key, i);
+    });
+    i++;
+  }
+});
+
+//filtering data based on Search query.
+
+const search = document.getElementById("search-input");
+
+// Fuction for showing the tasks according to the search query.
+search.addEventListener("input", () => {
+  filter.value = "All";
+  for (let key in tasks) {
+    tasks[key].forEach((item) => {
+      const task = document.getElementById(`${item.id}`);
+      if (task) task.remove();
+    });
+  }
+
+  let i = 0;
+  for (let key in tasks) {
+    tasks[key].forEach((item) => {
+      if (item.name.toLowerCase().includes(search.value.toLowerCase()))
         createTask(item.id, item.name, item.dueDate, item.priority, key, i);
     });
     i++;

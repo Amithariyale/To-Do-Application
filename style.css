@@ -36,13 +36,14 @@ header h1 {
 main {
     margin-top: 10px ;
     width: 80vw;
-
+    min-width: 560px;
 }
 
 
 #task-form {
     display: flex;
     gap: 5px;
+    flex-wrap: wrap;
 }
 
 #task-input {
@@ -54,7 +55,7 @@ main {
     flex-grow: 1;
 }
 
-#due-date-input {
+#due-date-input,#search-input {
     padding: 15px;
     color: #808080;
     background-color: #0D0D0D;
@@ -92,11 +93,18 @@ main {
 
 /* task container styling */
 
+#task-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 #task-container>div {
 
     border-bottom: 1px solid gray;
 }
-
+#todo,#started,#completed{
+    width: 80%;
+}
 .to-do-head,
 .started-head,
 .completed-head {
@@ -136,9 +144,6 @@ main {
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-}
-.header .priority{
-    color: #1E6F9F;
 }
 
 .buttons button {
