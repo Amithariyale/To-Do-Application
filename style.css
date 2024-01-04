@@ -48,7 +48,7 @@ main {
 #task-input {
     padding: 15px;
     color: white;
-    background-color: #262626;
+    background-color: #0D0D0D;
     border: none;
     border-radius: 8px;
     flex-grow: 1;
@@ -57,7 +57,7 @@ main {
 #due-date-input {
     padding: 15px;
     color: #808080;
-    background-color: #262626;
+    background-color: #0D0D0D;
     border: none;
     border-radius: 8px;
 }
@@ -73,19 +73,20 @@ main {
 #priority-container {
     padding: 15px;
     color: #808080;
-    background-color: #262626;
+    background-color: #0D0D0D;
     border: none;
     border-radius: 8px;
 }
 
 #task-form select {
     color: #b1afaf;
-    background-color: #262626;
+    background-color: #0D0D0D;
     border: none;
     outline: none;
 }
 #filter{
     font-size: 1.2rem;
+    border-radius: 8px;
 }
 
 

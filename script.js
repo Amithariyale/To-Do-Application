@@ -72,12 +72,15 @@ form.addEventListener("submit", function (e) {
       tasks[currentContainerId].length
     }`;
 
+    tasks.todo.length
+      ? (document.getElementById("empty-container").style.display = "none")
+      : (document.getElementById("empty-container").style.display = "flex");
+
     newTask.remove();
   }
 
   //   function for edit
   function editTask() {
-    console.log(taskName);
 
     form.task.value = taskName;
     form.date.value = taskDueDate;
@@ -99,7 +102,6 @@ form.addEventListener("submit", function (e) {
   document.getElementById("todo-high").innerText = `${countHigh(
     tasks.todo
   )} of ${tasks.todo.length}`;
-  console.log(tasks);
 
   // Tasks object for saving the data
 
@@ -171,6 +173,10 @@ function dropElement(e) {
     tasks[currentContainerId].length
   }`;
 
+  tasks.todo.length
+    ? (document.getElementById("empty-container").style.display = "none")
+    : (document.getElementById("empty-container").style.display = "flex");
+
   //   Adding element in current container
   e.currentTarget.insertBefore(draggingElement, dropText[dropIndex]);
   draggingElement = null;
@@ -180,12 +186,13 @@ function dropElement(e) {
 
 document.addEventListener("DOMContentLoaded", () => {
   const extractedData = localStorage.getItem("tasks");
+  let haveData = false;
   if (extractedData) {
-    document.getElementById("empty-container").style.display = "none";
     tasks = JSON.parse(extractedData);
     let i = 0;
     for (let key in tasks) {
       tasks[key].forEach((item) => {
+        haveData = true;
         createTask(item.id, item.name, item.dueDate, item.priority, key, i);
       });
       i++;
@@ -244,7 +251,6 @@ function createTask(id, taskName, taskDueDate, taskPriority, key, i) {
 
   //   function for edit
   function editTask() {
-    console.log(taskName);
 
     form.task.value = taskName;
     form.date.value = taskDueDate;
@@ -257,6 +263,9 @@ function createTask(id, taskName, taskDueDate, taskPriority, key, i) {
   document.getElementById(`${key}-high`).innerText = `${countHigh(
     tasks[key]
   )} of ${tasks[key].length}`;
+  tasks.todo.length
+    ? (document.getElementById("empty-container").style.display = "none")
+    : (document.getElementById("empty-container").style.display = "flex");
 }
 
 // Filter Functionality
@@ -282,7 +291,6 @@ filter.addEventListener("change", () => {
     return;
   }
 
-  console.log(filter.value);
   let i = 0;
   for (let key in tasks) {
     tasks[key].forEach((item) => {
