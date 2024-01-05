@@ -5,6 +5,7 @@
 }
 
 body {
+    width: 100vw;
     background-color: #262626;
     font-family: Arial, sans-serif;
     display: flex;
@@ -42,6 +43,7 @@ main {
 
 #task-form {
     display: flex;
+    justify-content: center;
     gap: 5px;
     flex-wrap: wrap;
 }

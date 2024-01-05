@@ -34,16 +34,16 @@ form.addEventListener("submit", function (e) {
   newTask.addEventListener("dragstart", onDragStart);
 
   newTask.innerHTML = `<div class="header">
-                          <p>Due on ${taskDueDate}</p>
-                          <p class="priority" style="color:${applyColor(
-                            taskPriority.trim()
-                          )};">${taskPriority}</p>
-                      </div>
-                      <div>
-                          <p>${taskName}</p>
-                          <div class="buttons">
-                          </div>
-                      </div>`;
+                            <p>Due on ${taskDueDate}</p>
+                            <p class="priority" style="color:${applyColor(
+                              taskPriority.trim()
+                            )};">${taskPriority}</p>
+                        </div>
+                        <div>
+                            <p>${taskName}</p>
+                            <div class="buttons">
+                            </div>
+                        </div>`;
 
   // Creating edit button for task
   let editButton = document.createElement("button");
@@ -72,14 +72,7 @@ form.addEventListener("submit", function (e) {
 
     // After delete updating the local storage.
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    document.getElementById(
-      `${currentContainerId}-count`
-    ).innerText = `${tasks[currentContainerId].length}`;
-    document.getElementById(
-      `${currentContainerId}-high`
-    ).innerText = `${countHigh(tasks[currentContainerId])} of ${
-      tasks[currentContainerId].length
-    }`;
+    updateTaskCount(currentContainerId);
 
     tasks.todo.length
       ? (document.getElementById("empty-container").style.display = "none")
@@ -99,10 +92,9 @@ form.addEventListener("submit", function (e) {
 
   //   Storing the newly created task in the local storage.
   localStorage.setItem("tasks", JSON.stringify(tasks));
-  document.getElementById("todo-count").innerText = `${tasks.todo.length}`;
-  document.getElementById("todo-high").innerText = `${countHigh(
-    tasks.todo
-  )} of ${tasks.todo.length}`;
+
+  // update task count
+  updateTaskCount("todo");
 
   form.reset();
 });
@@ -124,6 +116,19 @@ function editTask(e) {
   form.priority.value = currentElement.priority;
   form.button.innerText = "Save";
   document.getElementById(currentElementId).remove();
+}
+
+// function for updating task count
+
+function updateTaskCount(currentContainerId) {
+  document.getElementById(
+    `${currentContainerId}-count`
+  ).innerText = `${tasks[currentContainerId].length}`;
+  document.getElementById(
+    `${currentContainerId}-high`
+  ).innerText = `${countHigh(tasks[currentContainerId])} of ${
+    tasks[currentContainerId].length
+  }`;
 }
 
 // function for couting the highest priority tasks
@@ -187,22 +192,10 @@ function dropElement(e) {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 
   //   Decreesing the count of Element from previous container
-  document.getElementById(
-    `${prevContainerId}-count`
-  ).innerText = `${tasks[prevContainerId].length}`;
-  document.getElementById(`${prevContainerId}-high`).innerText = `${countHigh(
-    tasks[prevContainerId]
-  )} of ${tasks[prevContainerId].length}`;
+  updateTaskCount(prevContainerId);
 
   //   Increesing the count of Element in current container
-  document.getElementById(
-    `${currentContainerId}-count`
-  ).innerText = `${tasks[currentContainerId].length}`;
-  document.getElementById(
-    `${currentContainerId}-high`
-  ).innerText = `${countHigh(tasks[currentContainerId])} of ${
-    tasks[currentContainerId].length
-  }`;
+  updateTaskCount(currentContainerId);
 
   tasks.todo.length
     ? (document.getElementById("empty-container").style.display = "none")
@@ -240,16 +233,16 @@ function createTask(id, taskName, taskDueDate, taskPriority, key, i) {
   newTask.addEventListener("dragstart", onDragStart);
 
   newTask.innerHTML = `<div class="header">
-                          <p>Due on ${taskDueDate}</p>
-                          <p class="priority" style="color:${applyColor(
-                            taskPriority.trim()
-                          )}">${taskPriority}</p>
-                      </div>
-                      <div>
-                          <p>${taskName}</p>
-                          <div class="buttons">
-                          </div>
-                      </div>`;
+                            <p>Due on ${taskDueDate}</p>
+                            <p class="priority" style="color:${applyColor(
+                              taskPriority.trim()
+                            )}">${taskPriority}</p>
+                        </div>
+                        <div>
+                            <p>${taskName}</p>
+                            <div class="buttons">
+                            </div>
+                        </div>`;
 
   let editButton = document.createElement("button");
   editButton.innerHTML = `<i class="fa-regular fa-pen-to-square"></i>`;
@@ -271,14 +264,7 @@ function createTask(id, taskName, taskDueDate, taskPriority, key, i) {
       task.id === newTask.id);
     tasks[currentContainerId].splice(index, 1);
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    document.getElementById(
-      `${currentContainerId}-count`
-    ).innerText = `${tasks[currentContainerId].length}`;
-    document.getElementById(
-      `${currentContainerId}-high`
-    ).innerText = `${countHigh(tasks[currentContainerId])} of ${
-      tasks[currentContainerId].length
-    }`;
+    // ---------------------------
     tasks.todo.length
       ? (document.getElementById("empty-container").style.display = "none")
       : (document.getElementById("empty-container").style.display = "flex");
@@ -286,10 +272,9 @@ function createTask(id, taskName, taskDueDate, taskPriority, key, i) {
     newTask.remove();
   }
 
-  document.getElementById(`${key}-count`).innerText = `${tasks[key].length}`;
-  document.getElementById(`${key}-high`).innerText = `${countHigh(
-    tasks[key]
-  )} of ${tasks[key].length}`;
+  // update task count
+  updateTaskCount(key);
+
   tasks.todo.length
     ? (document.getElementById("empty-container").style.display = "none")
     : (document.getElementById("empty-container").style.display = "flex");
